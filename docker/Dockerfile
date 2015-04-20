@@ -2,8 +2,10 @@ FROM phusion/baseimage:0.9.9
 
 MAINTAINER Per Arneng
 
+#include "Dockerfile.apt"
+
 RUN apt-get update ;\
-    apt-get install vim
+    apt-get -y install vim wget unzip
 
 # --- install java ---
 WORKDIR /opt
@@ -27,8 +29,15 @@ RUN wget http://apache.mirrors.spacedump.net/maven/maven-3/${MVN_VERSION}/binari
 ENV MAVEN_HOME /opt/maven
 ENV PATH ${MAVEN_HOME}/bin:$PATH
 
-COPY install_eclipse.sh ./install_eclipse.sh
-RUN ./install_eclipse.sh
+# --- USER dev ---
+RUN useradd dev
+USER dev
 
-RUN curl -O http://heanet.dl.sourceforge.net/project/eclim/eclim/2.4.1/eclim_2.4.1.jar
-RUN java -Dvim.files=$HOME/.nvim -Declipse.home=$HOME/eclipse -jar eclim_2.4.1.jar install && rm $HOME/eclim_2.4.1.jar
+
+COPY install_eclipse.sh /tmp/install_eclipse.sh
+RUN . /tmp/install_eclipse.sh
+
+RUN mkdir /opt/eclim
+WORKDIR /opt/eclim
+RUN wget http://heanet.dl.sourceforge.net/project/eclim/eclim/2.4.1/eclim_2.4.1.jar
+RUN java -Dvim.files=$HOME/.nvim -Declipse.home=/opt/eclipse -jar /opt/eclim/eclim_2.4.1.jar install 

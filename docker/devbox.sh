@@ -49,7 +49,7 @@ image="perarneng/devbox:"$tagname
 if [[ -n $build ]]
 then
 	log "building "$image
-	docker build -t $image
+	docker build -t $image .
 fi
 
 if [[ -n $push ]]
