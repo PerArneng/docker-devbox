@@ -10,30 +10,31 @@ function print_help {
 	log "OPTIONS:"
 	log "   -b  				build the image"
 	log "   -p  				push the image"
-  log "   -t <tag>   	the tag for the image"
-	log "   -h          this help"
+  log "   -t <tag>		the tag for the image"
+	log "   -help				this help"
 }
 while getopts "bpt:h" opt; do
   	case $opt in
 	  	h)
-			print_help
-			exit
+				print_help
+				exit
 			;;
 
 			b) build="true";;
 			p) push="true";;
-	    t) tagname=$OPTARG;;
+			t) tagname=$OPTARG;;
 
-	    \?)
-	    	log "invalid option: -$OPTARG" >&2
-	    	print_help
-	    	exit 1
-	    	;;
-	    :)
-	    	log "option -$OPTARG requires an argument." >&2
-	    	print_help
-	    	exit 1
-	    	;;
+			\?)
+				log "invalid option: -$OPTARG" >&2
+	 			print_help
+				exit 1
+			;;
+
+			:)
+				log "option -$OPTARG requires an argument." >&2
+				print_help
+				exit 1
+			;;
 	esac
 done
 
